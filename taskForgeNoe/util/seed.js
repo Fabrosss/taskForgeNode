@@ -2,7 +2,7 @@ const Task = require('../models/task');
 const User = require('../models/user');
 const Role = require('../models/role');
 const bcrypt = require('bcryptjs')
-const {where} = require("sequelize");
+const { Op } = require('sequelize');
 module.exports = async function seedDatabase() {
     // Inicjalizacja zadań
     await createTaskIfNotFound(
@@ -41,9 +41,16 @@ module.exports = async function seedDatabase() {
     await createRole("EDITOR")
     await createRole('USER');
     const roles1 = await Role.findAll();
-    const roles2 = await Role.findOne({where: {name: "USER"}})
+    const roles2 = await Role.findAll({
+        where: {
+            [Op.or]: [
+                { name: "USER" },
+                { name: "EDITOR" }
+            ]
+        }
+    });
     await createUserIfNotFound('Test', 'test@test.pl', tasks, roles1);
-    await createUserIfNotFound('teściowa', 'edytor@test.pl',tasks2, roles2);
+    await createUserIfNotFound('editor', 'editor@test.pl',tasks2, roles2);
 };
 
 

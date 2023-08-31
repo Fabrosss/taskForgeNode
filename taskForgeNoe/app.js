@@ -11,7 +11,6 @@ const User = require('./models/user');
 const Role = require('./models/role');
 const seedDatabase = require('./util/seed')
 const app = express();
-
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 Role.belongsToMany(User, {through:'UserRoles'});
